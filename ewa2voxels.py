@@ -90,28 +90,30 @@ class Ewald3D():
  
     def print_voxels(self):
         print("Voxels Data:")         
-        print(" {0:.0f} <= X <= {1:.0f}".format(numpy.min(self.VoxelsData[:,0]),numpy.max(self.VoxelsData[:,0]))) 
-        print(" {0:.0f} <= Y <= {1:.0f}".format(numpy.min(self.VoxelsData[:,1]),numpy.max(self.VoxelsData[:,1])))
-        print(" {0:.0f} <= Z <= {1:.0f}".format(numpy.min(self.VoxelsData[:,2]),numpy.max(self.VoxelsData[:,2])))
+        print(" Center at {0:.0f} {1:.0f} {2:.0f}".format(*self.OriginPosition)) 
+        print(" Limits:") 
+        print("  {0:.0f} <= X <= {1:.0f}".format(numpy.min(self.VoxelsData[:,0]),numpy.max(self.VoxelsData[:,0]))) 
+        print("  {0:.0f} <= Y <= {1:.0f}".format(numpy.min(self.VoxelsData[:,1]),numpy.max(self.VoxelsData[:,1])))
+        print("  {0:.0f} <= Z <= {1:.0f}".format(numpy.min(self.VoxelsData[:,2]),numpy.max(self.VoxelsData[:,2])))
         print(" Voxels Count: {0:.0f}".format(self.VoxelsDataCounter)) 
 
  
     def export_vtu(self):     
-        print("Creating VTU data file...",end="\r")   
+        print("Creating .vtu file...",end="\r")   
         pointsToVTK(self.vtufilename, 
             numpy.ascontiguousarray(self.VoxelsData[:,0]),
             numpy.ascontiguousarray(self.VoxelsData[:,1]), 
             numpy.ascontiguousarray(self.VoxelsData[:,2]), 
             data = {"Intensity" : numpy.ascontiguousarray(self.VoxelsData[:,3])})
-        print("VTU data file: " + self.vtufilename + ".vtu") 
+        print("*.vtu file: " + self.vtufilename + ".vtu") 
     
    
     def export_xyzI(self):      
-        print("Creating DAT file...",end="\r")   
+        print("Creating [x y z I] *.dat file...",end="\r")   
         with open(self.datfilename,"w") as datfile:
             for item in self.VoxelsData:
                 datfile.write("{0:4.0f} {1:4.0f} {2:4.0f} {3:.5f}\n".format(*item)) 
-        print("(X,Y,Z,I) data file: " + self.datfilename) 
+        print("*.dat file: " + self.datfilename) 
 
 
 
@@ -120,10 +122,10 @@ class Ewald3D():
 
             
 if __name__ == "__main__": 
-    parser = argparse.ArgumentParser(description='Convert .ewa file to *.vtu and (X,Y,Z,I) array.')
-    parser.add_argument('inputewafile', type=str, help='*.ewa file name')
+    parser = argparse.ArgumentParser(description='Convert .ewa file to *.vtu and [x y z I] array.')
+    parser.add_argument('ewafile', type=str, help='path to *.ewa file')
     args = parser.parse_args()
-    ewa = Ewald3D(args.inputewafile)
+    ewa = Ewald3D(args.ewafile)
     ewa.read_header()
     ewa.read_voxels()
     ewa.print_header()

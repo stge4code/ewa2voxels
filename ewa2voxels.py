@@ -63,7 +63,7 @@ class Ewald3D():
         while True:
             try:
                 vc = self.read('1L',4)[0]
-                bvc = "{0:b}".format(vc)
+                bvc = "{0:032b}".format(vc)
                 VoxelCoordinates = [int(bvc[-10:],2), int(bvc[-20:-10],2),int(bvc[-30:-20],2)]          
                 IntensityValue = self.read('1f',4)[0]
                 if self.VoxelAdditionalDataSize:
